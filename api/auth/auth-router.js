@@ -1,11 +1,20 @@
+const bcrypt = require('bcryptjs')
+const { BCRYPT_ROUNDS } = require('../../config')
+const makeToken = require('./auth-token-builder')
 const router = require('express').Router();
 const Db = require('../dbHelpers')
 const { checkReqBody, checkUsernameExists } = require('./auth-middleware')
 
+
 router.post('/register', checkReqBody, checkUsernameExists, (req, res, next) => {
-  Db.insert(req.body)
-    .then(res => {
-      res.status(200).json(res)
+  let user = req.body
+  const hash = bcrypt.hashSync(user.password, BCRYPT_ROUNDS)
+  user.password = hash
+  console.log(user)
+
+  Db.insert(user)
+    .then(response => {
+      res.status(201).json(response)
     })
     .catch(next)
   /*

@@ -10,12 +10,16 @@ const checkReqBody = (req, res, next) => {
 }
 
 const checkUsernameExists = async (req, res, next) => {
-    const { username } = req.body.username
-    const exists = await Db.findBy(username)
-    if (exists) {
-        next({ status: 409, message: 'username taken' })
-    } else {
-        next()
+    try {
+        const { username } = req.body
+        const exists = await Db.findBy({ username })
+        if (exists) {
+            next({ status: 409, message: 'username taken' })
+        } else {
+            next()
+    }
+    } catch(err) {
+        next(err)
     }
 }
 
