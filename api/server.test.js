@@ -68,6 +68,20 @@ describe('POST /api/auth', () => {
       .send({})
     expect(res.body.message).toBe('username and password required')
   })
+
+  test('call to /login with incorrect username or password sends appropriate error messages', async () => {
+    await request(server)
+      .post('/api/auth/register')
+      .send({ username: 'groudon', password: 'tough' })
+    let res = await request(server)
+      .post('/api/auth/login')
+      .send({ username: 'kyogre', password: 'tough' })
+    expect(res.body.message).toBe('invalid credentials')
+    res = await request(server)
+      .post('/api/auth/login')
+      .send({ username: 'groudon', password: 'weak' })
+    expect(res.body.message).toBe('invalid credentials')
+  })
 })
 
 describe('GET /api/jokes', () => {
