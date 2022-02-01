@@ -6,7 +6,6 @@ const findBy =  (filter) => {
 
 const insert = async (newUser) => {
     const [id] = await db('users').insert(newUser)
-    console.log(id)
     return findBy({ id })
 }
 
