@@ -10,7 +10,6 @@ router.post('/register', checkReqBody, checkUsernameExists, (req, res, next) => 
   let user = req.body
   const hash = bcrypt.hashSync(user.password, BCRYPT_ROUNDS || 3)
   user.password = hash
-  console.log(user)
 
   Db.insert(user)
     .then(response => {
